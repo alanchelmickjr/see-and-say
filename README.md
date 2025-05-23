@@ -1,16 +1,21 @@
-ValueFinder 📱💰
+## ValueFinder: Instantly Identify, Value, and Sell Items with AI 📱💰
 
-Instantly identify, value, and sell items around you with AI-powered simplicity
+**Built for Speed. Powered by AI. No Cloud.**
 
-License: MIT Vercel React Native eBay API
+**License:** MIT
 
-🔍 Overview
+**Built with:** React Native, JavaScript, Local Attentive Transformer Models, eBay API
 
-ValueFinder is a revolutionary mobile application that transforms how people discover the value of items around them and sell them online. Using your device's camera, ValueFinder identifies objects in real-time, places bounding boxes around them, estimates their market value on eBay, and lets you list them for sale with a single tap.
+**Deployment:** Vercel
 
-ValueFinder Demo
+**🔍 Overview**
 
-✨ Key Features
+ValueFinder is a game-changing application that lets you discover the value of items around you and sell them online with ease. Using your device's camera, ValueFinder identifies objects in real-time with **on-device AI**, estimates their market value on eBay, and allows you to list them for sale with a single tap. **All processing happens locally – your data stays private.**
+
+<!-- Add a link to a demo video or GIF here -->
+<!-- [ValueFinder Demo](link-to-demo) -->
+
+**✨ Key Features**
 
 Real-time Object Detection: Point your camera at any item to instantly identify it
 On-device AI Processing: Uses local attentive transformer models for privacy and efficiency
@@ -21,11 +26,13 @@ Offline Capability: Core features work without an internet connection
 Universal Application: Works on everyday items, collectibles, electronics, vehicles, and more
 🛠️ Technology Stack
 
-Frontend: React Native, JavaScript
-AI/ML: Local attentive transformer models for object detection and classification
-APIs: eBay Trading API for pricing data and listing creation
-Deployment: Vercel for seamless CI/CD and hosting
-Authentication: Secure OAuth integration with eBay
+* **Frontend:** React Native, JavaScript
+* **AI/ML:** Local Attentive Transformer Models for object detection and classification (100% on-device)
+* **APIs:** eBay Trading API for pricing data and listing creation
+* **Deployment:** Vercel
+* **Authentication:** Secure OAuth integration with eBay
+
+*(Note: This project does not utilize Google, Aparavi, or Neo4j. It is built with the technologies listed above.)*
 📋 Requirements
 
 Node.js 18.x or higher
