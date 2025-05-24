@@ -1,4 +1,6 @@
 # Simply eBay - AI-Powered Mobile Selling Revolution
+## Alpha Version 0.01 Under Development for Preview next week
+
 
 ![Gun.js P2P](https://img.shields.io/badge/Gun.js-P2P_Database-FF6B6B?style=for-the-badge&logo=javascript)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-AI_Engine-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
