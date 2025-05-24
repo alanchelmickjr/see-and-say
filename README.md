@@ -2,6 +2,7 @@
 
 ![Gun.js P2P](https://img.shields.io/badge/Gun.js-P2P_Database-FF6B6B?style=for-the-badge&logo=javascript)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-AI_Engine-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![LlamaFile](https://img.shields.io/badge/LlamaFile-Local_AI-4B0082?style=for-the-badge&logo=meta)
 
 **Simply eBay: Turn your phone into an AI-powered eBay listing machine. Point, Scan, Price, List - effortlessly. Maximize your sales, minimize the hassle.**
 
