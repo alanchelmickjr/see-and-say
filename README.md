@@ -26,8 +26,8 @@ The visionary force behind the architecture, endless innovation, and patient deb
 [![Copilot Badge](https://img.shields.io/badge/GitHub-Copilot-000000?style=for-the-badge&logo=github)](https://copilot.github.com)  
 The wise counselor providing gentle guidance, code completion, and gracefully handling unabashed performance critiques with endless patience.
 
-**🎯 Alan Helmick** - *Vision Driver & Berkeley Bum*  
-[![Berkeley Badge](https://img.shields.io/badge/BCC-003262?style=for-the-badge&logo=university)](https://berekelycitycollege.edu)  
+**🎯 Alan Helmick** - *Vision Driver & Mira AI Founder*  
+[![Mira AI Badge](https://img.shields.io/badge/Mira%20AI-222222?style=for-the-badge)](https://miraai.ai)  
 The product visionary barely holding the reins (with a smile) while steering this wild AI collaboration toward a focused, user-centered solution.
 
 **⚡ Maximus** - *CalTech Contributor & "Vision"ary*  
@@ -62,13 +62,14 @@ This project represents a hard-earned lesson in product development: **focus bea
 
 [![Claude Sonnet](https://img.shields.io/badge/Built_with-Claude_Sonnet_3.5-8A2BE2?style=for-the-badge&logo=anthropic)](https://claude.ai)
 [![Crafted by](https://img.shields.io/badge/Crafted_by-Alan_Helmick_&_Maximus-FFD700?style=for-the-badge&logo=github)](https://github.com)
+[![Mira AI Badge](https://img.shields.io/badge/Mira%20AI-222222?style=for-the-badge)](https://miraai.ai)
 
 > **🚀 Point. Scan. Sell. Repeat.**  
 > *The world's first truly mobile-first AI-powered eBay listing creator with real-time camera recognition and P2P data sync.*
 
 ---
 
-## ✨ **What Makes Simply eBay Revolutionary**
+## ✨ **What Makes Simply eBay Revolutionary
 
 🎯 **Instant AI Recognition** • Point your camera at any item → Get instant identification, pricing, and eBay listing suggestions  
 📱 **Mobile-First Design** • Neumorphic UI designed specifically for touch interfaces and one-handed operation  
