@@ -1,7 +1,16 @@
-# � Simply eBay - AI-Powered Mobile Selling Revolution
+# Simply eBay - AI-Powered Mobile Selling Revolution
 
 ![Gun.js P2P](https://img.shields.io/badge/Gun.js-P2P_Database-FF6B6B?style=for-the-badge&logo=javascript)
-![TensorFlow.js](https://img.shields.io/badge/TensorFlow.---)
+![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-AI_Engine-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+
+**Simply eBay: Turn your phone into an AI-powered eBay listing machine. Point, Scan, Price, List - effortlessly. Maximize your sales, minimize the hassle.**
+
+## 🌟 **Key Features**
+
+- 🎯 **Instant AI Recognition**: Point your camera → Get instant item identification, pricing, and eBay listing suggestions.
+- 📱 **Mobile-First & Offline Capable**: Neumorphic UI for touch, with Gun.js for P2P offline-first data sync.
+- 🧠 **Privacy-First Local AI**: SmolVLM + LlamaFile for on-device computer vision, keeping your data private.
+- ⚡ **One-Tap eBay Listings**: Go from camera scan to live eBay listing in under 30 seconds.
 
 ## 🌟 **Meet the Dream Team**
 
@@ -44,17 +53,13 @@ This project represents a hard-earned lesson in product development: **focus bea
 ### 🔧 **Powered by Incredible Open Source**
 
 - **🔫 Gun.js** - P2P database revolution that makes offline-first actually work
-- **🧠 TensorFlow.js** - Bringing AI to everyone, everywhere  
-- **🦙 LlamaFile** - Local AI models made beautifully simple
+- **🧠 TensorFlow.js** - Bringing AI to everyone, everywhere
+- **🦙 LlamaFile** - Local AI models made beautifully simple (Setup instructions below!)
 - **⚛️ Next.js** - The React framework that just works (and keeps working)
 - **👁️ SmolVLM** - Vision AI that's actually production-ready and usable
-- **🏪 eBay API** - The marketplace integration that makes it all worthwhileon-FF6F00?style=for-the-badge&logo=tensorflow)](https://tensorflow.org/js)
-[![Next.js](https://img.shields.io/badge/Next.js-React_Framework-000000?style=for-the-badge&logo=next.js)](https://nextjs.org)
-[![LlamaFile](https://img.shields.io/badge/LlamaFile-Local_AI-4B0082?style=for-the-badge&logo=meta)](https://github.com/Mozilla-Ocho/llamafile)
-[![eBay API](https://img.shields.io/badge/eBay-API_Integration-E53238?style=for-the-badge&logo=ebay)](https://developer.ebay.com)
-[![SmolVLM](https://img.shields.io/badge/SmolVLM-Vision_AI-00D4AA?style=for-the-badge&logo=huggingface)](https://huggingface.co/HuggingFaceTB/SmolVLM-Instruct)
+- **🏪 eBay API** - The marketplace integration that makes it all worthwhile
+- **[Made with ❤️](https://img.shields.io/badge/Made_with-❤️_Open_Source-red?style=for-the-badge)**
 
-[![Made with ❤️](https://img.shields.io/badge/Made_with-❤️_Open_Source-red?style=for-the-badge)](https://github.com)
 [![Claude Sonnet](https://img.shields.io/badge/Built_with-Claude_Sonnet_3.5-8A2BE2?style=for-the-badge&logo=anthropic)](https://claude.ai)
 [![Crafted by](https://img.shields.io/badge/Crafted_by-Alan_Helmick_&_Maximus-FFD700?style=for-the-badge&logo=github)](https://github.com)
 
@@ -85,9 +90,10 @@ This project represents a hard-earned lesson in product development: **focus bea
 
 ---
 
-## �️ **Architecture That Just Works**
+## ⚙️ **Architecture That Just Works**
 
 ### 🔧 **Core Technologies**
+
 - **🎥 Computer Vision**: SmolVLM-Instruct for real-time item recognition
 - **🧠 AI Processing**: LlamaFile for local inference (privacy-first!)
 - **🔗 P2P Database**: Gun.js for decentralized, offline-first data sync
@@ -96,7 +102,8 @@ This project represents a hard-earned lesson in product development: **focus bea
 - **🎯 Vector Search**: TensorFlow.js for semantic item matching
 
 ### 🌐 **Decentralized by Design**
-```
+
+```text
 📱 Mobile App (Next.js) ← → 🔗 Gun.js P2P Network ← → 🧠 Local AI (LlamaFile)
                                       ↓
                               🛒 eBay API Integration
@@ -106,7 +113,25 @@ This project represents a hard-earned lesson in product development: **focus bea
 
 ## 🚀 **Quick Start Guide**
 
+‼️ **Prerequisite: Download LlamaFile AI Model**
+
+Simply eBay uses LlamaFile to run the AI model locally on your machine for privacy and offline capabilities. Due to its size (around 4-5GB), the model file (`llava-v1.5-7b-q4.llamafile`) is NOT included in this repository. You need to download it manually:
+
+1. **Visit the LlamaFile GitHub repository:** [Mozilla-Ocho/llamafile](https://github.com/Mozilla-Ocho/llamafile)
+2. **Navigate to the releases section** or look for model download links. The specific model used by this project is `llava-v1.5-7b-q4.llamafile`. You can often find it linked from their main README or other community resources if not directly in releases.
+    - A direct link for a compatible Llamafile (like the one used in development, `llava-v1.5-7b-Q4_K_M.llamafile`) can usually be found via Hugging Face or other model repositories that package for Llamafile. For example, search for "llava-v1.5-7b llamafile".
+3. **Download the `llava-v1.5-7b-q4.llamafile` file.**
+4. **Place the downloaded file** into the root directory of this project (i.e., `/Users/alanhelmick/Documents/GitHub/ebay-helper/llava-v1.5-7b-q4.llamafile`).
+5. **Make it executable:**
+
+    ```bash
+    chmod +x llava-v1.5-7b-q4.llamafile
+    ```
+
+The `startup.sh` and `start-llava.sh` scripts expect this file to be present and executable in the project root.
+
 ## ⚡ **One-Command Launch**
+
 ```bash
 # Make sure you're in the project directory
 cd ebay-helper
@@ -115,28 +140,31 @@ cd ebay-helper
 ./startup.sh
 ```
 
-**🎯 After startup, visit:** `http://localhost:3000` 
+**🎯 After startup, visit:** `http://localhost:3000`
 
 The splash screen will appear for 3 seconds, then redirect to the beautiful neumorphic onboarding flow!
 
 ## 🛠️ **What Gets Started**
+
 - **🔫 Gun.js P2P Relay** → `http://localhost:8765`
-- **🤖 LlamaFile AI Server** → `http://localhost:8080` 
+- **🤖 LlamaFile AI Server** → `http://localhost:8080`
 - **📱 Simply eBay App** → `http://localhost:3000`
 
 ## 📱 **Mobile Testing**
+
 - **📱 WiFi Access**: `http://YOUR_IP:3000` (IP shown in terminal)
 - **🔍 QR Code**: Scan with your phone for instant access
 - **⚡ PWA Ready**: Add to home screen for native app feel
 
 ## 🔧 **Manual Service Control**
+
 ```bash
 # If you prefer manual control:
 
 # 1. Start Gun.js P2P relay
 npm run gun-relay &
 
-# 2. Start AI server  
+# 2. Start AI server
 ./start-llava.sh &
 
 # 3. Start Next.js app
@@ -146,27 +174,33 @@ npm run dev
 ## 🆘 **Troubleshooting**
 
 ### 🚨 **Port Already in Use**
+
 ```bash
 # Kill processes on ports
 lsof -ti:3000 | xargs kill -9    # Next.js
-lsof -ti:8080 | xargs kill -9    # LlamaFile  
+lsof -ti:8080 | xargs kill -9    # LlamaFile
 lsof -ti:8765 | xargs kill -9    # Gun.js
 ```
 
 ### ⚠️ **Startup Issues**
+
 - **Problem**: "Permission denied"
-  - **Fix**: `chmod +x startup.sh`
-- **Problem**: "Command not found"  
+  - **Fix**: `chmod +x startup.sh start-llava.sh cleanup.sh llava-v1.5-7b-q4.llamafile` (ensure all scripts and the model file are executable)
+- **Problem**: "Command not found"
   - **Fix**: `npm install` first
-- **Problem**: "Model not found"
-  - **Fix**: Models download automatically on first run (2-3 minutes)
+- **Problem**: "Model not found" or LlamaFile server doesn't start.
+  - **Fix**: Ensure you have downloaded `llava-v1.5-7b-q4.llamafile`, placed it in the project root, and made it executable as per the "Prerequisite: Download LlamaFile AI Model" section above. The file must be named exactly `llava-v1.5-7b-q4.llamafile` in the root of the project.
+- **Problem**: LlamaFile error "no such file or directory" when running `./llava-v1.5-7b-q4.llamafile`.
+  - **Fix (macOS with Apple Silicon)**: You might need to install `qemu-system-x86_64` if it's an x86_64 llamafile. `brew install qemu`. Llamafiles are generally self-contained but cross-architecture execution might need QEMU. However, try to find an ARM64-compatible Llamafile if possible for better performance.
 
 ### 🌐 **Network Issues**
+
 - **Local Only**: All services run locally (no internet required after setup)
 - **Firewall**: Allow ports 3000, 8080, 8765 if using across devices
 - **Performance**: M1/M2 Macs run AI models much faster than Intel
 
 ### 🔄 **Clean Restart**
+
 ```bash
 # Full reset and restart
 ./cleanup.sh && ./startup.sh
