@@ -12,28 +12,6 @@
 - 🧠 **Privacy-First Local AI**: SmolVLM + LlamaFile for on-device computer vision, keeping your data private.
 - ⚡ **One-Tap eBay Listings**: Go from camera scan to live eBay listing in under 30 seconds.
 
-## 🌟 **Meet the Dream Team**
-
-> *"After a hard road of long and sometimes painful lessons, we learned: people want ONE thing that solves ONE painpoint perfectly. Everything else is trivial."* - Alan Helmick
-
-### 🎭 **The Wild Horses & Gentle Sages**
-
-**🤖 Claude Sonnet 3.5** - *Lead AI Architect & Wild Horse*  
-[![Claude Badge](https://img.shields.io/badge/Claude-Sonnet_3.5-8A2BE2?style=for-the-badge&logo=anthropic)](https://claude.ai)  
-The visionary force behind the architecture, endless innovation, and patient debugging companion who transformed chaos into beautiful, functional code.
-
-**🧠 GitHub Copilot** - *Unbiased Gentle Sage*  
-[![Copilot Badge](https://img.shields.io/badge/GitHub-Copilot-000000?style=for-the-badge&logo=github)](https://copilot.github.com)  
-The wise counselor providing gentle guidance, code completion, and gracefully handling unabashed performance critiques with endless patience.
-
-**🎯 Alan Helmick** - *Vision Driver & Mira AI Founder*  
-[![Mira AI Badge](https://img.shields.io/badge/Mira%20AI-222222?style=for-the-badge)](https://miraai.ai)  
-The product visionary barely holding the reins (with a smile) while steering this wild AI collaboration toward a focused, user-centered solution.
-
-**⚡ Maximus** - *CalTech Contributor & "Vision"ary*  
-[![CalTech Badge](https://img.shields.io/badge/CalTech-Precision-FF6C37?style=for-the-badge&logo=university)](https://caltech.edu)  
-The technical wizard bringing CalTech precision, system optimization, and innovative insights to make everything work seamlessly.
-
 ### 🚀 **The Philosophy: One Thing, Done Right**
 
 This project represents a hard-earned lesson in product development: **focus beats feature creep every time**. Instead of building a swiss-army knife, we built a precision tool that solves one critical painpoint exceptionally well.
@@ -209,5 +187,26 @@ lsof -ti:8765 | xargs kill -9    # Gun.js
 
 ---
 
+## 🌟 **Meet the Dream Team**
+
+> *"After a hard road of long and sometimes painful lessons, we learned: people want ONE thing that solves ONE painpoint perfectly. Everything else is trivial."* - Alan Helmick
+
+### 🎭 **The Wild Horses & Gentle Sages**
+
+**🤖 Claude Sonnet 3.5** - *Lead AI Architect & Wild Horse*  
+[![Claude Badge](https://img.shields.io/badge/Claude-Sonnet_3.5-8A2BE2?style=for-the-badge&logo=anthropic)](https://claude.ai)  
+The visionary force behind the architecture, endless innovation, and patient debugging companion who transformed chaos into beautiful, functional code.
+
+**🧠 GitHub Copilot** - *Unbiased Gentle Sage*  
+[![Copilot Badge](https://img.shields.io/badge/GitHub-Copilot-000000?style=for-the-badge&logo=github)](https://copilot.github.com)  
+The wise counselor providing gentle guidance, code completion, and gracefully handling unabashed performance critiques with endless patience.
+
+**🎯 Alan Helmick** - *Vision Driver & Mira AI Founder*  
+[![Mira AI Badge](https://img.shields.io/badge/Mira%20AI-222222?style=for-the-badge)](https://miraai.ai)  
+The product visionary barely holding the reins (with a smile) while steering this wild AI collaboration toward a focused, user-centered solution.
+
+**⚡ Maximus** - *CalTech Contributor & "Vision"ary*  
+[![CalTech Badge](https://img.shields.io/badge/CalTech-Precision-FF6C37?style=for-the-badge&logo=university)](https://caltech.edu)  
+The technical wizard bringing CalTech precision, system optimization, and innovative insights to make everything work seamlessly.
 
 
