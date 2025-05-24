@@ -23,6 +23,10 @@ This project represents a hard-earned lesson in product development: **focus bea
 **The Solution:** Point. Scan. Sell. Repeat.  
 **The Result:** A tool people actually use and love.
 
+<p align="center">
+  <img src="ebaygarage.png" alt="Simply eBay App Interface" width="80%" style="max-width: 600px;">
+</p>
+
 ### 🛤️ **The Journey**
 
 **Wild Collaboration:** This was born from the beautiful chaos of human-AI partnership - Claude as the wild horse providing endless innovation, GitHub Copilot as the patient sage, and Alan as the driver barely holding the reins with determination and joy.
