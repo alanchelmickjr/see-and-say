@@ -1,11 +1,15 @@
-import { supabase } from '../../../lib/supabaseClient';
+import Gun from 'gun';
+import 'gun/sea';
+
+// Initialize Gun.js with SEA for authentication
+const gun = Gun(['http://localhost:8765']);
 
 /**
  * @swagger
  * /api/auth/register:
  *   post:
  *     summary: Register a new user
- *     description: Creates a new user account using email and password.
+ *     description: Creates a new user account using Gun.js P2P authentication with email and password.
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -90,71 +94,131 @@ export default async function handler(req, res) {
 
   const { email, password, confirmPassword } = req.body;
 
-  // TEST: Request body must contain email, password, confirmPassword
+  // Validate required fields
   if (!email || !password || !confirmPassword) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  // TEST: Email must be a valid format (basic check, Supabase handles more robustly)
+  // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Invalid email format' });
   }
 
-  // TEST: Password and confirmPassword must match
+  // Validate password match
   if (password !== confirmPassword) {
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-  // TEST: Password must meet complexity requirements (Supabase default is min 6 characters)
-  // Supabase handles password complexity rules on its end.
-  // We could add more client-side or API-side checks if custom rules are stricter than Supabase's.
-  if (password.length < 6) {
-    return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+  // Validate password length (Gun.js requires at least 8 characters)
+  if (password.length < 8) {
+    return res.status(400).json({ 
+      error: 'Password must be at least 8 characters long',
+      code: 'PASSWORD_TOO_SHORT',
+      suggestion: 'Please choose a stronger password with at least 8 characters'
+    });
   }
 
   try {
-    // TEST: User with this email should not already exist (Supabase handles this)
-    // TEST: Password hashing must be secure (Supabase handles this)
-    // TEST: New user record should be created successfully
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+    // Create user reference in Gun.js
+    const user = gun.user();
+    
+    // Attempt to create account with Gun.js SEA with timeout
+    const createPromise = new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Registration timeout - please try again'));
+      }, 10000); // 10 second timeout
+
+      user.create(email, password, (ack) => {
+        clearTimeout(timeout);
+        if (ack.err) {
+          console.error('Gun.js create error:', ack.err);
+          reject(new Error(ack.err));
+        } else {
+          resolve(ack);
+        }
+      });
     });
 
-    if (error) {
-      // Check for specific Supabase errors
-      if (error.message.includes('User already registered')) {
-        return res.status(409).json({ error: 'User with this email already exists' });
-      }
-      // Log the detailed error for server-side inspection
-      console.error('Supabase signUp error:', error);
-      return res.status(error.status || 500).json({ error: error.message || 'Failed to create user' });
-    }
+    const createResult = await createPromise;
 
-    // TEST: Session should be created for the new user (Supabase handles this)
-    // TEST: Successful registration returns a session token and user info
-    if (data.user && data.session) {
-      // Supabase might require email confirmation depending on project settings.
-      // If email confirmation is enabled, data.user will exist but data.session might be null
-      // until the email is confirmed. The response should reflect this.
-      if (data.session) {
-         return res.status(201).json({ user: data.user, session: data.session });
-      } else if (data.user && !data.session) {
-        // Email confirmation pending
-        return res.status(201).json({ 
-            message: 'Registration successful. Please check your email to confirm your account.',
-            user: { id: data.user.id, email: data.user.email } 
-        });
-      }
-    }
+    // Auto-login after successful registration
+    const authPromise = new Promise((resolve, reject) => {
+      user.auth(email, password, (ack) => {
+        if (ack.err) {
+          reject(new Error(ack.err));
+        } else {
+          resolve(ack);
+        }
+      });
+    });
+
+    const authResult = await authPromise;
     
-    // Fallback for unexpected scenarios, though Supabase usually provides clear data/error
-    console.error('Supabase signUp response missing user or session:', data);
-    return res.status(500).json({ error: 'User registration completed but session data is unavailable. Please try logging in.' });
+    // Create session-like object for compatibility
+    const registrationData = {
+      user: {
+        id: user.is?.pub || 'anonymous',
+        email: email,
+        authenticated: true,
+        provider: 'gun-p2p',
+        created_at: new Date().toISOString()
+      },
+      session: {
+        access_token: user.is?.pub || 'gun-session',
+        token_type: 'p2p',
+        expires_at: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
+        provider: 'gun'
+      },
+      message: 'Registration successful and logged in'
+    };
+
+    return res.status(201).json(registrationData);
 
   } catch (err) {
-    console.error('Registration handler error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Gun.js registration error:', err.message);
+    
+    // Handle specific Gun.js registration errors with detailed user feedback
+    if (err.message.includes('Password too short') || err.message.toLowerCase().includes('password') && err.message.toLowerCase().includes('short')) {
+      return res.status(400).json({ 
+        error: 'Password must be at least 8 characters long for security',
+        code: 'PASSWORD_TOO_SHORT',
+        suggestion: 'Please choose a stronger password with at least 8 characters including letters and numbers',
+        retryable: true
+      });
+    }
+    
+    if (err.message.includes('User already created') || err.message.includes('already taken')) {
+      return res.status(409).json({ 
+        error: 'User with this email already exists',
+        code: 'USER_EXISTS',
+        suggestion: 'Try logging in instead, or use a different email address'
+      });
+    }
+    
+    if (err.message.includes('Invalid email')) {
+      return res.status(400).json({ 
+        error: 'Please enter a valid email address',
+        code: 'INVALID_EMAIL',
+        suggestion: 'Make sure your email is in the correct format (example@domain.com)'
+      });
+    }
+    
+    if (err.message.includes('Network') || err.message.includes('timeout')) {
+      return res.status(503).json({ 
+        error: 'Connection problem - please try again',
+        code: 'NETWORK_ERROR',
+        suggestion: 'Check your internet connection and try again in a moment',
+        retryable: true
+      });
+    }
+    
+    // Generic fallback with retry option
+    return res.status(500).json({ 
+      error: 'Registration temporarily unavailable',
+      code: 'SERVICE_UNAVAILABLE',
+      suggestion: 'Please try again in a moment. If the problem persists, contact support.',
+      retryable: true
+    });
   }
 }

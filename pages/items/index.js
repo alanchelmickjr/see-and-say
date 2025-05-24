@@ -3,147 +3,251 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { withAuthGuard } from '../../components/auth/AuthGuard';
 import { useAuth } from '../../context/AuthContext';
-// It's good practice to have a central place for API calls or use a library like SWR/React Query
-// For simplicity, we'll use fetch directly here.
-
+import gunDataService from '../../lib/gunDataService';
+import localVectorStore from '../../lib/localVectorStore';
 
 function UserItemsPage() {
-  const { user } = useAuth(); // Get user from context
+  const { user } = useAuth();
   const [items, setItems] = useState([]);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 0,
-  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [similarityResults, setSimilarityResults] = useState([]);
   const router = useRouter();
 
-  const { page: queryPage = 1, status: queryStatus = '' } = router.query;
-
   useEffect(() => {
-    const fetchItems = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const params = new URLSearchParams({
-          page: queryPage,
-          limit: 10, // Or make this configurable
-        });
-        if (queryStatus) {
-          params.append('status', queryStatus);
-        }
+    fetchItems();
+    setupRealtimeSync();
+  }, [user]);
 
-        const res = await fetch(`/api/items?${params.toString()}`);
-        if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || 'Failed to fetch items');
-        }
-        const data = await res.json();
-        setItems(data.items);
-        setPagination(data.pagination);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+  const fetchItems = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      if (!user) {
+        setItems([]);
+        return;
       }
-    };
 
-    if (user) { // Only fetch if user is confirmed
-      fetchItems();
+      // Get items from Gun.js P2P network
+      const userItems = await gunDataService.getUserItems();
+      setItems(userItems);
+      
+      // Get vector similarity data
+      const vectors = localVectorStore.getAllVectors();
+      setSimilarityResults(vectors.slice(0, 5)); // Show recent 5 for now
+      
+    } catch (err) {
+      console.error('Error fetching items:', err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user, queryPage, queryStatus]);
-
-  const handlePageChange = (newPage) => {
-    router.push(`/items?page=${newPage}${queryStatus ? `&status=${queryStatus}` : ''}`);
   };
 
-  const handleStatusFilterChange = (event) => {
-    const newStatus = event.target.value;
-    router.push(`/items?page=1${newStatus ? `&status=${newStatus}` : ''}`);
+  // Setup real-time sync with Gun.js
+  const setupRealtimeSync = () => {
+    if (!user) return;
+
+    try {
+      // Subscribe to real-time updates from Gun.js
+      gunDataService.subscribeToUserItems((item) => {
+        setItems(prevItems => {
+          const existingIndex = prevItems.findIndex(i => i.id === item.id);
+          if (existingIndex >= 0) {
+            // Update existing item
+            const updated = [...prevItems];
+            updated[existingIndex] = item;
+            return updated;
+          } else {
+            // Add new item
+            return [...prevItems, item];
+          }
+        });
+      });
+    } catch (error) {
+      console.warn('Real-time sync setup failed:', error);
+    }
   };
 
-  if (isLoading) return <div>Loading your items...</div>;
-  if (error) return <div>Error: {error}</div>;
+  const handleDeleteItem = async (itemId) => {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+
+    try {
+      // Remove from Gun.js
+      if (user) {
+        gunDataService.user.get('items').get(itemId).put(null);
+      }
+      
+      // Remove from local vectors
+      localVectorStore.removeVector(itemId.toString());
+      localVectorStore.saveToStorage();
+      
+      // Update local state
+      setItems(items.filter(item => item.id !== itemId));
+    } catch (err) {
+      alert(`Error deleting item: ${err.message}`);
+    }
+  };
+
+  const filteredItems = items.filter(item => {
+    if (filterStatus === 'all') return true;
+    return item.status === filterStatus;
+  });
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'listed': return '#28a745';
+      case 'sold': return '#6f42c1';
+      case 'draft': return '#ffc107';
+      default: return '#6c757d';
+    }
+  };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: 'auto' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>My Inventory</h1>
-      
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <Link href="/items/new" legacyBehavior>
-          <a style={{
-            padding: '10px 15px',
-            backgroundColor: '#0070f3',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '5px'
-          }}>
-            + Add New Item
-          </a>
-        </Link>
-        <div>
-          <label htmlFor="statusFilter">Filter by status: </label>
-          <select id="statusFilter" value={queryStatus} onChange={handleStatusFilterChange} style={{padding: '8px'}}>
-            <option value="">All</option>
-            <option value="new">New</option>
-            <option value="inventory">Inventory</option>
-            <option value="listed_on_ebay">Listed on eBay</option>
-            <option value="sold">Sold</option>
-            <option value="kept">Kept</option>
-            <option value="archived">Archived</option>
+    <div className="container mx-auto px-4 py-6 max-w-4xl">
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          📦 My Inventory
+        </h1>
+        
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <Link href="/items/scan" className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold py-3 px-6 rounded-lg text-center hover:from-orange-600 hover:to-red-600 transition-all shadow-lg">
+            📷 AI Scan Items
+          </Link>
+          <Link href="/items/new" className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-3 px-6 rounded-lg text-center hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg">
+            ➕ Add New Item
+          </Link>
+        </div>
+
+        {/* Filter Controls */}
+        <div className="mb-6">
+          <label className="block text-gray-700 font-semibold mb-2">Filter by Status:</label>
+          <select 
+            value={filterStatus} 
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Items</option>
+            <option value="recognized">📱 Recognized</option>
+            <option value="draft">📝 Draft</option>
+            <option value="listed">🔗 Listed</option>
+            <option value="sold">💰 Sold</option>
           </select>
         </div>
+
+        {/* Real-time Connection Status */}
+        {user && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 text-sm">
+              🔄 Real-time sync enabled • {items.length} items • {similarityResults.length} AI vectors stored
+            </p>
+          </div>
+        )}
       </div>
 
-      {items.length === 0 ? (
-        <p>You haven't added any items yet.</p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {items.map((item) => (
-            <li key={item.item_id} style={{
-              border: '1px solid #ddd',
-              padding: '15px',
-              marginBottom: '10px',
-              borderRadius: '5px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <div>
-                <h2 style={{ margin: '0 0 5px 0' }}>
-                  <Link href={`/items/${item.item_id}`} legacyBehavior>
-                    <a>{item.item_name}</a>
-                  </Link>
-                </h2>
-                <p style={{ margin: 0, color: '#555' }}>Status: {item.status}</p>
-                {/* Placeholder for primary image */}
-              </div>
-              {/* Add edit/delete buttons later */}
-            </li>
-          ))}
-        </ul>
+      {/* Error State */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-red-800">❌ Error: {error}</p>
+        </div>
       )}
 
-      {pagination.totalPages > 1 && (
-        <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          <button
-            onClick={() => handlePageChange(pagination.currentPage - 1)}
-            disabled={pagination.currentPage === 1}
-            style={{marginRight: '10px', padding: '8px 12px'}}
-          >
-            Previous
-          </button>
-          <span>
-            Page {pagination.currentPage} of {pagination.totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(pagination.currentPage + 1)}
-            disabled={pagination.currentPage === pagination.totalPages}
-            style={{marginLeft: '10px', padding: '8px 12px'}}
-          >
-            Next
-          </button>
+      {/* Loading State */}
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your items...</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {filteredItems.length === 0 ? (
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-500 text-lg mb-4">
+                {filterStatus === 'all' ? '📦 No items yet' : `No ${filterStatus} items found`}
+              </p>
+              <Link href="/items/scan" className="inline-block bg-orange-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors">
+                Start Scanning Items
+              </Link>
+            </div>
+          ) : (
+            filteredItems.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                  <div className="flex-1 mb-4 lg:mb-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Link href={`/items/${item.id}`} className="text-xl font-bold text-blue-600 hover:text-blue-800 transition-colors">
+                        {item.name || 'Untitled Item'}
+                      </Link>
+                      <span 
+                        className="px-2 py-1 rounded-full text-xs font-semibold text-white"
+                        style={{ backgroundColor: getStatusColor(item.status || 'recognized') }}
+                      >
+                        {item.status || 'recognized'}
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600 mb-3">
+                      <p>📂 Category: {item.category || 'Uncategorized'}</p>
+                      <p>🏷️ Condition: {item.condition || 'Unknown'}</p>
+                      <p>🎯 Confidence: {Math.round((item.confidence || 0.75) * 100)}%</p>
+                      <p>⏰ {new Date(item.created_at || item.timestamp).toLocaleDateString()}</p>
+                    </div>
+
+                    {item.price && (
+                      <p className="text-lg font-bold text-green-600 mb-2">
+                        💰 {item.price}
+                      </p>
+                    )}
+
+                    {item.description && (
+                      <p className="text-gray-700 text-sm mb-3 line-clamp-2">
+                        {item.description.length > 100 ? `${item.description.substring(0, 100)}...` : item.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 lg:ml-4">
+                    <Link 
+                      href={`/items/${item.id}`}
+                      className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors text-center"
+                    >
+                      📝 Edit
+                    </Link>
+                    <Link 
+                      href={`/api/items/${item.id}/create-ebay-listing`}
+                      className="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors text-center"
+                    >
+                      🔗 List on eBay
+                    </Link>
+                    <button
+                      onClick={() => handleDeleteItem(item.id)}
+                      className="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
+                    >
+                      🗑️ Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Vector Similarity Insights */}
+      {similarityResults.length > 0 && (
+        <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">🧠 AI Recognition Insights</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {similarityResults.slice(0, 6).map((vector) => (
+              <div key={vector.id} className="bg-white rounded-lg p-3 shadow-sm">
+                <p className="font-semibold text-sm text-gray-800">{vector.metadata.itemName}</p>
+                <p className="text-xs text-gray-600">{vector.metadata.category}</p>
+                <p className="text-xs text-green-600 font-semibold">{vector.metadata.price}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

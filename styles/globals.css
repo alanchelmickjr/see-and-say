@@ -2,12 +2,459 @@
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global styles here if needed */
+/* Neumorphic Design System for Simply eBay */
+:root {
+  --neu-bg-primary: #e8ecf1;
+  --neu-bg-secondary: #f4f7fa;
+  --neu-shadow-light: #ffffff;
+  --neu-shadow-dark: #d1d9e6;
+  --neu-shadow-inset-light: #ffffff80;
+  --neu-shadow-inset-dark: #d1d9e680;
+  --neu-border-radius: 20px;
+  --neu-border-radius-lg: 30px;
+  --neu-border-radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  background-color: #f9fafb; /* A light gray, similar to bg-gray-50 */
-  color: #111827; /* Default text color, similar to text-gray-900 */
+  background: linear-gradient(135deg, #e8ecf1 0%, #f4f7fa 100%);
+  color: #2d3748;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Neumorphic Card System */
+.neumorphic-card {
+  background: var(--neu-bg-primary);
+  border-radius: var(--neu-border-radius);
+  box-shadow: 
+    12px 12px 24px var(--neu-shadow-dark),
+    -12px -12px 24px var(--neu-shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.neumorphic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+}
+
+.neumorphic-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    16px 16px 32px var(--neu-shadow-dark),
+    -16px -16px 32px var(--neu-shadow-light);
+}
+
+/* Neumorphic Inputs */
+.neumorphic-input {
+  background: var(--neu-bg-primary);
+  border: none;
+  border-radius: var(--neu-border-radius-sm);
+  box-shadow: 
+    inset 6px 6px 12px var(--neu-shadow-inset-dark),
+    inset -6px -6px 12px var(--neu-shadow-inset-light);
+  color: #2d3748;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.neumorphic-input:focus {
+  box-shadow: 
+    inset 8px 8px 16px var(--neu-shadow-inset-dark),
+    inset -8px -8px 16px var(--neu-shadow-inset-light),
+    0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: none !important;
+}
+
+.neumorphic-input::placeholder {
+  color: #9ca3af;
+  font-weight: 300;
+}
+
+/* Neumorphic Buttons */
+.neumorphic-button {
+  background: var(--neu-bg-primary);
+  border: none;
+  border-radius: var(--neu-border-radius-sm);
+  box-shadow: 
+    6px 6px 12px var(--neu-shadow-dark),
+    -6px -6px 12px var(--neu-shadow-light);
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 120px;
+  max-width: 200px;
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neumorphic-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    8px 8px 16px var(--neu-shadow-dark),
+    -8px -8px 16px var(--neu-shadow-light);
+}
+
+.neumorphic-button:active {
+  transform: translateY(1px);
+  box-shadow: 
+    inset 4px 4px 8px var(--neu-shadow-inset-dark),
+    inset -4px -4px 8px var(--neu-shadow-inset-light);
+}
+
+.neumorphic-button-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  box-shadow: 
+    6px 6px 12px rgba(37, 99, 235, 0.3),
+    -6px -6px 12px rgba(59, 130, 246, 0.1);
+  min-width: 140px;
+  max-width: 320px;
+}
+
+.neumorphic-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    8px 8px 16px rgba(37, 99, 235, 0.4),
+    -8px -8px 16px rgba(59, 130, 246, 0.2);
+}
+
+.neumorphic-button-oauth {
+  background: white;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 500;
+  min-width: 260px;
+  max-width: 100%;
+  width: 100%;
+  padding: 16px 20px;
+  box-shadow: 
+    6px 6px 12px rgba(209, 217, 230, 0.8),
+    -6px -6px 12px rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.neumorphic-button-oauth:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 
+    8px 8px 16px rgba(209, 217, 230, 0.6),
+    -8px -8px 16px rgba(255, 255, 255, 1);
+}
+
+/* Mini buttons */
+.neumorphic-button-mini {
+  background: var(--neu-bg-primary);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 
+    4px 4px 8px var(--neu-shadow-dark),
+    -4px -4px 8px var(--neu-shadow-light);
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neumorphic-button-mini:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    6px 6px 12px var(--neu-shadow-dark),
+    -6px -6px 12px var(--neu-shadow-light);
+}
+
+/* Form Button Containers */
+.button-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button-container .neumorphic-button,
+.button-container .neumorphic-button-primary {
+  flex: 0 0 auto;
+  min-width: 100px;
+  max-width: 140px;
+  padding: 12px 16px;
+}
+
+/* Circles and Icons */
+.neumorphic-circle {
+  background: var(--neu-bg-primary);
+  border-radius: 50%;
+  box-shadow: 
+    8px 8px 16px var(--neu-shadow-dark),
+    -8px -8px 16px var(--neu-shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neumorphic-mini-circle {
+  background: var(--neu-bg-primary);
+  border-radius: 50%;
+  box-shadow: 
+    4px 4px 8px var(--neu-shadow-dark),
+    -4px -4px 8px var(--neu-shadow-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Progress Bar */
+.neumorphic-progress-track {
+  background: var(--neu-bg-primary);
+  border-radius: 10px;
+  box-shadow: 
+    inset 4px 4px 8px var(--neu-shadow-inset-dark),
+    inset -4px -4px 8px var(--neu-shadow-inset-light);
+  overflow: hidden;
+}
+
+.neumorphic-progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  box-shadow: 
+    0 2px 4px rgba(16, 185, 129, 0.2);
+  transition: width 0.3s ease;
+}
+
+/* Centered Layout */
+.centered-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Form Container */
+.form-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Prevent input jumping */
+input, textarea, select {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Page constraints for desktop */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Main app container - prevents airplane wings */
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Form container with better constraints */
+.form-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Feature card containers - no more airplane wings! */
+.feature-cards-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Icon card sizing fixes - prevent airplane wings */
+.icon-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 100%;
+  width: auto;
+  margin: 0;
+  gap: 0.75rem;
+}
+
+/* Ensure icons don't stretch */
+.icon-card .neumorphic-mini-circle {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* Text content styling */
+.icon-card span {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Onboarding specific constraints */
+.onboarding-header {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* OAuth button container */
+.oauth-container {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Step content wrapper */
+.step-content {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Progress bar container */
+.progress-container {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Mobile-first improvements */
+@media (max-width: 480px) {
+  .app-container {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .form-container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .feature-cards-container {
+    max-width: 100%;
+  }
+  
+  .neumorphic-button-oauth {
+    min-width: 240px;
+    font-size: 14px;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .neumorphic-card {
+    margin: 10px;
+    border-radius: 16px;
+  }
+  
+  .form-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .centered-layout {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .app-container {
+    max-width: 500px;
+    padding: 0 2rem;
+  }
+  
+  .form-container {
+    max-width: 400px;
+  }
+  
+  .feature-cards-container {
+    max-width: 360px;
+  }
+  
+  .neumorphic-button-oauth {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  
+  .feature-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .quick-action-card {
+    min-width: 250px;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 0 0.5rem;
+  }
+  
+  .app-container {
+    padding: 0 0.5rem;
+  }
+}
+
+/* Card spacing */
+.neumorphic-card + .neumorphic-card {
+  margin-top: 1.5rem;
+}
+
+/* Loading Animation */
+@keyframes neuPulse {
+  0%, 100% {
+    box-shadow: 
+      6px 6px 12px var(--neu-shadow-dark),
+      -6px -6px 12px var(--neu-shadow-light);
+  }
+  50% {
+    box-shadow: 
+      3px 3px 6px var(--neu-shadow-dark),
+      -3px -3px 6px var(--neu-shadow-light);
+  }
+}
+
+.neumorphic-pulse {
+  animation: neuPulse 2s ease-in-out infinite;
 }

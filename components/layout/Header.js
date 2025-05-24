@@ -13,8 +13,8 @@ export default function Header() {
   return (
     <header className="bg-gray-800 text-white p-4 shadow-md">
       <nav className="container mx-auto flex justify-between items-center">
-        <Link href="/">
-          <a className="text-xl font-bold hover:text-gray-300">eBay Helper</a>
+        <Link href="/" className="text-xl font-bold hover:text-gray-300">
+          eBay Helper
         </Link>
         <div className="space-x-4 flex items-center">
           {loading ? (
@@ -22,8 +22,14 @@ export default function Header() {
           ) : isAuthenticated && user ? (
             <>
               <span className="text-sm">Welcome, {user.email}</span>
-              <Link href="/items/new">
-                <a className="hover:text-gray-300">New Item</a>
+              <Link href="/items/scan" className="hover:text-gray-300 bg-orange-600 hover:bg-orange-700 px-3 py-1 rounded text-sm font-medium">
+                📷 Scan
+              </Link>
+              <Link href="/items" className="hover:text-gray-300">
+                Items
+              </Link>
+              <Link href="/items/new" className="hover:text-gray-300">
+                New Item
               </Link>
               <button
                 onClick={handleLogout}
@@ -34,11 +40,11 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link href="/auth/login">
-                <a className="hover:text-gray-300">Login</a>
+              <Link href="/auth/login" className="hover:text-gray-300">
+                Login
               </Link>
-              <Link href="/auth/register">
-                <a className="hover:text-gray-300">Register</a>
+              <Link href="/auth/register" className="hover:text-gray-300">
+                Register
               </Link>
             </>
           )}

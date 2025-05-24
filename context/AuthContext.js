@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import gunDataService from '../lib/gunDataService';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Start with loading true to check session
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const router = useRouter();
 
@@ -13,17 +14,8 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/auth/me');
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      } else {
-        setUser(null);
-        if (response.status !== 401) { // Don't set error for normal "not logged in"
-          const errData = await response.json();
-          setError(errData.error || 'Failed to fetch user');
-        }
-      }
+      const currentUser = gunDataService.getCurrentUser();
+      setUser(currentUser);
     } catch (e) {
       console.error("AuthContext fetchUser error:", e);
       setUser(null);
@@ -37,60 +29,68 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, [fetchUser]);
 
-  const login = async (email, password) => {
+  const register = async (email, password, confirmPassword) => {
     setLoading(true);
     setError(null);
+    
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, confirmPassword }),
       });
+
       const data = await response.json();
-      if (response.ok) {
-        setUser(data.user);
-        router.push('/'); // Redirect to home or dashboard
-        return { success: true, user: data.user };
-      } else {
-        setError(data.error || 'Login failed');
-        return { success: false, error: data.error || 'Login failed' };
+
+      if (!response.ok) {
+        const errorMessage = data.suggestion || data.error || 'Registration failed';
+        setError(errorMessage);
+        throw new Error(errorMessage);
       }
+
+      setUser(data.user);
+      return { success: true, user: data.user };
     } catch (e) {
-      console.error("AuthContext login error:", e);
-      setError('An unexpected error occurred during login.');
-      return { success: false, error: 'An unexpected error occurred during login.' };
+      console.error("Registration error:", e);
+      const errorMessage = e.message || 'Registration failed. Please try again.';
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (email, password, confirmPassword) => {
+  const login = async (email, password) => {
     setLoading(true);
     setError(null);
+    
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, confirmPassword }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
+
       const data = await response.json();
-      if (response.ok) {
-        // If email confirmation is required, data.session might be null.
-        // The API returns a message in this case.
-        if (data.session) {
-          setUser(data.user);
-          router.push('/');
-        }
-        // The page component will display data.message if present
-        return { success: true, user: data.user, message: data.message };
-      } else {
-        setError(data.error || 'Registration failed');
-        return { success: false, error: data.error || 'Registration failed' };
+
+      if (!response.ok) {
+        const errorMessage = data.suggestion || data.error || 'Login failed';
+        setError(errorMessage);
+        throw new Error(errorMessage);
       }
+
+      setUser(data.user);
+      router.push('/items/scan');
+      return { success: true, user: data.user };
     } catch (e) {
-      console.error("AuthContext register error:", e);
-      setError('An unexpected error occurred during registration.');
-      return { success: false, error: 'An unexpected error occurred during registration.' };
+      console.error("Login error:", e);
+      const errorMessage = e.message || 'Login failed. Please try again.';
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -99,21 +99,30 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setLoading(true);
     setError(null);
+    
     try {
-      const response = await fetch('/api/auth/logout', { method: 'POST' });
-      if (response.ok) {
-        setUser(null);
-        router.push('/auth/login'); // Redirect to login page
-        return { success: true };
-      } else {
-        const data = await response.json();
-        setError(data.error || 'Logout failed');
-        return { success: false, error: data.error || 'Logout failed' };
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.warn('Logout warning:', data.error);
       }
+
+      setUser(null);
+      router.push('/onboarding');
+      return { success: true };
     } catch (e) {
-      console.error("AuthContext logout error:", e);
-      setError('An unexpected error occurred during logout.');
-      return { success: false, error: 'An unexpected error occurred during logout.' };
+      console.error("Logout error:", e);
+      // Even if logout fails, clear local state
+      setUser(null);
+      router.push('/onboarding');
+      return { success: true };
     } finally {
       setLoading(false);
     }
@@ -127,7 +136,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    fetchUser // expose fetchUser if manual refresh is needed
+    fetchUser
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

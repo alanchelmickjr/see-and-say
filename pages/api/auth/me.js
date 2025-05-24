@@ -1,11 +1,15 @@
-import { supabase } from '../../../lib/supabaseClient';
+import Gun from 'gun';
+import 'gun/sea';
+
+// Initialize Gun.js with SEA for authentication
+const gun = Gun(['http://localhost:8765']);
 
 /**
  * @swagger
  * /api/auth/me:
  *   get:
  *     summary: Get current authenticated user
- *     description: Retrieves the details of the currently authenticated user based on their session token.
+ *     description: Retrieves the details of the currently authenticated user from Gun.js P2P session.
  *     tags:
  *       - Authentication
  *     security:
@@ -70,31 +74,29 @@ export default async function handler(req, res) {
   // the JWT found in the Authorization header (if provided) or in a cookie.
 
   try {
-    // TEST: Request must contain a valid session token (Supabase client handles extraction)
-    // TEST: Session token must correspond to an active, non-expired session (Supabase handles this)
-    const { data: { user }, error } = await supabase.auth.getUser();
+    // Create user reference in Gun.js
+    const user = gun.user();
+    
+    // Check if user is authenticated
+    if (user.is) {
+      // User is authenticated, return user info
+      const userInfo = {
+        id: user.is.pub,
+        email: user.is.alias || 'unknown',
+        authenticated: true,
+        provider: 'gun-p2p',
+        session_created: new Date().toISOString(),
+        pub_key: user.is.pub
+      };
 
-    if (error) {
-      // Log the detailed error for server-side inspection
-      console.error('Supabase getUser error:', error);
-      // This error typically means the token is invalid, expired, or not present.
-      return res.status(401).json({ error: error.message || 'Unauthorized: Invalid or missing token' });
-    }
-
-    // TEST: User associated with the session must exist
-    if (!user) {
-      // This case should ideally be caught by the error above,
-      // but as a safeguard:
+      return res.status(200).json({ user: userInfo });
+    } else {
+      // No active session
       return res.status(401).json({ error: 'Unauthorized: No active session found' });
     }
 
-    // TEST: Current user info (excluding sensitive data) is returned
-    // Supabase's user object by default doesn't include overly sensitive data like password hashes.
-    // We can further sanitize if needed, but for now, the default user object is fine.
-    return res.status(200).json({ user });
-
   } catch (err) {
-    console.error('Get current user handler error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Gun.js get user error:', err);
+    return res.status(500).json({ error: 'Authentication service unavailable' });
   }
 }
