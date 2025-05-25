@@ -9,7 +9,7 @@
 ![Mira AI Badge](https://img.shields.io/badge/Created_by-Mira_AI-purple)
 ![CalTech Badge](https://img.shields.io/badge/Precision_from-CalTech-orange)
 
-**Point, See, Understand. Instantly. See & Say transforms your smartphone and AR glasses into an intelligent eye, identifying objects, scenes, and text in real-time, then narrating the world around you.**
+**Point, See, Understand. Whatever AI sees, it says.  Instantly. See & Say transforms your smartphone and AR glasses into an intelligent eye, identifying objects, scenes, and text in real-time, then narrating the world around you, on demand or continously like a helper walking next to you via your smartphone or AR glasses.**
 
 ## Overview
 
@@ -17,7 +17,7 @@ See & Say: Turn your phone into an AI-powered visual companion. Point, Scan, Ide
 
 Kids, different languages, sight impaired, just forgot!  We know most smartphones do this but this Open Source allows you to make your own and control it locally, NO CLOUD, we all know our data is sold, be private.
 
-Identify landmarks, learns stories about historical items, or just navigate your environment safely.
+Identify landmarks, learns stories about historical items, or just navigate your environment safely.  Whatever AI sees, it says.
 
 ## 🌟 Key Features
 
@@ -222,3 +222,5 @@ lsof -ti:8765 | xargs kill -9    # Gun.js
 ---
 
 We're excited to build See & Say and explore the possibilities of AI-powered visual understanding on both mobile and AR platforms!
+
+Whatever AI sees, it says.
