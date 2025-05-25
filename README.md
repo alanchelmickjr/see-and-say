@@ -1,4 +1,4 @@
-# See & Say: AI-Powered Visual Narration Revolution
+# See & Say: AI-Powered Visual Narration offline
 **Alpha Version 0.01 Under Development for Preview next week**
 
 ![Gun.js P2P](https://img.shields.io/badge/Gun.js-P2P_Database-FF6B6B?style=for-the-badge&logo=javascript)
@@ -9,13 +9,15 @@
 ![Mira AI Badge](https://img.shields.io/badge/Created_by-Mira_AI-purple)
 ![CalTech Badge](https://img.shields.io/badge/Precision_from-CalTech-orange)
 
-**Gun.js P2P TensorFlow.js LlamaFile**
-
 **Point, See, Understand. Instantly. See & Say transforms your smartphone and AR glasses into an intelligent eye, identifying objects, scenes, and text in real-time, then narrating the world around you.**
 
 ## Overview
 
 See & Say: Turn your phone into an AI-powered visual companion. Point, Scan, Identify, Narrate - effortlessly. Experience the world around you in new ways, with instant audio feedback.
+
+Kids, different languages, sight impaired, just forgot!  We know most smartphones do this but this Open Source allows you to make your own and control it locally, NO CLOUD, we all know our data is sold, be private.
+
+Identify landmarks, learns stories about historical items, or just navigate your environment safely.
 
 ## 🌟 Key Features
 
@@ -35,7 +37,7 @@ This project represents a hard-earned lesson in product development: focus beats
 
 ## See & Say App Interface
 
-![See & Say Interface](ebaygarage.png)
+![See & Say Interface](ideniftylandmarks.png)
 
 ## 🛤️ The Journey
 
@@ -55,7 +57,7 @@ This project represents a hard-earned lesson in product development: focus beats
 
 **Made with ❤️**
 
-![Claude Sonnet Crafted by Mira AI Badge](https://img.shields.io/badge/Crafted_by-Claude_Sonnet_3.5-blue)
+![Claude Sonnet Crafted by Mira AI Badge](https://img.shields.io/badge/Crafted_by-Claude_Sonnet_4-blue)
 
 ## 🚀 Point. See. Understand. Narrate.
 
