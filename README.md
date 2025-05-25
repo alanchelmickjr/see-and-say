@@ -38,6 +38,7 @@ This project represents a hard-earned lesson in product development: focus beats
 ## See & Say App Interface
 
 ![See & Say Interface](identifylandmarks.png)
+![Translate Text](translatetext.png)
 
 ## 🛤️ The Journey
 
